@@ -39,19 +39,19 @@ jobs:
             cp -r temp_scaffold/android mobile/android
             rm -rf temp_scaffold
             cd mobile
+                  fi
+
+      - name: Android internet iznini ekle
+        run: |
+          manifest="android/app/src/main/AndroidManifest.xml"
+          if ! grep -q 'android.permission.INTERNET' "$manifest"; then
+            sed -i '/<manifest/a\    <uses-permission android:name="android.permission.INTERNET"/>' "$manifest"
           fi
-              - name: Android internet iznini ekle
-      run: |
-        manifest="android/app/src/main/AndroidManifest.xml"
-        if ! grep -q 'android.permission.INTERNET' "$manifest"; then
-          sed -i '/<manifest/a\    <uses-permission android:name="android.permission.INTERNET"/>' "$manifest"
-        fi
 
       - name: .env dosyasını oluştur (GitHub Secrets'tan)
         run: |
           echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" > .env
           echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
-
       - name: Bağımlılıkları indir
         run: flutter pub get
 
