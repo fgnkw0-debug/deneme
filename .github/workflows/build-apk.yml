@@ -31,13 +31,15 @@ jobs:
         run: |
           supabase functions deploy sync-fixtures --project-ref "$SUPABASE_PROJECT_ID"
           supabase functions deploy compute-predictions --project-ref "$SUPABASE_PROJECT_ID"
-            - name: Maçları senkronize et
+
+      - name: Maçları senkronize et
         run: |
           curl -X POST \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Content-Type: application/json" \
             "https://${{ secrets.SUPABASE_PROJECT_ID }}.supabase.co/functions/v1/sync-fixtures"
+
   build:
     runs-on: ubuntu-latest
 
