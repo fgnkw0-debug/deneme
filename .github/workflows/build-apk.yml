@@ -1,0 +1,61 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mobile
+
+    steps:
+      - name: Kodu çek
+        uses: actions/checkout@v4
+
+      - name: Java kur
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Flutter kur
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          flutter-version: '3.24.0'
+
+      # android/ klasörü repoda yoksa (ilk kurulum), geçici bir proje
+      # üzerinden native Android iskeletini üretip mobile/android'e kopyalar.
+      # Bu sayede lib/ ve pubspec.yaml dosyalarımıza dokunulmaz.
+      - name: Android native iskeletini oluştur (gerekirse)
+        run: |
+          if [ ! -d "android" ]; then
+            echo "android/ klasörü bulunamadı, oluşturuluyor..."
+            cd ..
+            flutter create --platforms=android --org com.futboltahmin --project-name futbol_tahmin temp_scaffold
+            cp -r temp_scaffold/android mobile/android
+            rm -rf temp_scaffold
+            cd mobile
+          fi
+
+      - name: .env dosyasını oluştur (GitHub Secrets'tan)
+        run: |
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" > .env
+          echo "SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}" >> .env
+
+      - name: Bağımlılıkları indir
+        run: flutter pub get
+
+      - name: APK derle (release)
+        run: flutter build apk --release
+
+      - name: APK'yı artifact olarak yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: futbol-tahmin-apk
+          path: mobile/build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30

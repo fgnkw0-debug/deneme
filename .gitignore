@@ -1,0 +1,28 @@
+# Ortam değişkenleri - ASLA yüklenmeyecek
+.env
+mobile/.env
+supabase/.env
+
+# Flutter / Dart
+mobile/.dart_tool/
+mobile/.packages
+mobile/build/
+mobile/android/
+mobile/ios/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/pubspec.lock
+mobile/*.iml
+
+# Not: mobile/android ve mobile/ios klasörleri GitHub Actions tarafından
+# build sırasında otomatik oluşturulur, repoda tutulmasına gerek yoktur.
+# Eğer native klasörleri repoya dahil etmek isterseniz yukarıdaki iki
+# satırı silin.
+
+# Genel
+.DS_Store
+*.log
+node_modules/
+
+# Supabase local
+supabase/.temp/
