@@ -15,9 +15,9 @@ select cron.schedule(
   '0 0,6,12,18 * * *',
   $$
   select net.http_post(
-    url := 'https://<PROJECT_REF>.supabase.co/functions/v1/sync-fixtures',
+    url := 'https://einzwdpjvqzfigoxesgk.supabase.co/functions/v1/sync-fixtures',
     headers := jsonb_build_object(
-      'Authorization', 'Bearer <SERVICE_ROLE_KEY>',
+      'Authorization', 'Bearer <sb_secret_j8aHTNza57QiJhtofFaYFQ_0nluOquy>',
       'Content-Type', 'application/json'
     )
   );
@@ -30,7 +30,7 @@ select cron.schedule(
   '10 0,6,12,18 * * *',
   $$
   select net.http_post(
-    url := 'https://<PROJECT_REF>.supabase.co/functions/v1/compute-predictions',
+    url := 'https://einzwdpjvqzfigoxesgk.supabase.co/functions/v1/compute-predictions',
     headers := jsonb_build_object(
       'Authorization', 'Bearer <SERVICE_ROLE_KEY>',
       'Content-Type', 'application/json'
